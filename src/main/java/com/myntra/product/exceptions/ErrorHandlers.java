@@ -37,4 +37,14 @@ public class ErrorHandlers {
         baseResponse.setErrors(errors);
         return new ResponseEntity<>(baseResponse,HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<BaseResponse> handleGlobalException(Exception e){
+        BaseResponse baseResponse = new BaseResponse();
+        Set<Error> errors = new HashSet<>();
+        errors.add(new Error("Internal Server Error",e.getMessage()));
+        baseResponse.setErrors(errors);
+        return new ResponseEntity<>(baseResponse,HttpStatus.BAD_REQUEST);
+    }
 }

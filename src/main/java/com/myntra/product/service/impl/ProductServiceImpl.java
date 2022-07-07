@@ -6,6 +6,7 @@ import com.myntra.product.repository.ImageRepository;
 import com.myntra.product.repository.ProductRepository;
 import com.myntra.product.request.CreateProductRequest;
 import com.myntra.product.request.EditProductRequest;
+import com.myntra.product.request.GetProductsRequest;
 import com.myntra.product.response.*;
 import com.myntra.product.service.ProductService;
 import com.myntra.product.service.helper.CreateProductHelper;
@@ -57,5 +58,11 @@ public class ProductServiceImpl implements ProductService {
     public ResponseEntity<EditProductImagesResponse> editProductImages(long productId, List<MultipartFile> images) {
         EditProductImagesResponse productImagesResponse = editProductHelper.editProductImages(productId,images);
         return new ResponseEntity<>(productImagesResponse,HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<GetProductsResponse> getProductsList(GetProductsRequest getProductsRequest) {
+        GetProductsResponse getProductsResponse = getProductHelper.getProductsList(getProductsRequest);
+        return new ResponseEntity<>(getProductsResponse,HttpStatus.OK);
     }
 }

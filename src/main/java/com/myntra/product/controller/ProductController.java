@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myntra.product.request.CreateProductRequest;
 import com.myntra.product.request.EditProductRequest;
+import com.myntra.product.request.GetProductsRequest;
 import com.myntra.product.response.*;
 import com.myntra.product.service.ProductService;
 import com.myntra.product.validators.ModelValidator;
@@ -38,6 +39,13 @@ public class ProductController {
     public ResponseEntity<GetProductResponse> getProductById(@RequestParam("productId") long productId) {
 
         return productService.getProductById(productId);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<GetProductsResponse> getListOfProducts(@RequestParam("listOfProductIds") String listOfProductIds) throws JsonProcessingException{
+        GetProductsRequest getProductsRequest = mapper.readValue(listOfProductIds,GetProductsRequest.class);
+        modelValidator.validate(getProductsRequest);
+        return productService.getProductsList(getProductsRequest);
     }
 
     @PutMapping()

@@ -4,7 +4,9 @@ import com.myntra.product.entities.*;
 import com.myntra.product.exceptions.ProductNotFoundException;
 import com.myntra.product.repository.ImageRepository;
 import com.myntra.product.repository.ProductRepository;
+import com.myntra.product.request.GetProductsRequest;
 import com.myntra.product.response.*;
+import com.myntra.product.response.Error;
 import com.myntra.product.util.ErrorConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -57,5 +59,33 @@ public class GetProductHelper {
         List<String> imageResponses = new ArrayList<>();
         images.forEach(image -> imageResponses.add(image.getImageUrl()));
         productResponse.setImages(imageResponses);
+    }
+
+    public GetProductsResponse getProductsList(GetProductsRequest getProductsRequest) {
+        GetProductsResponse response = new GetProductsResponse();
+        List<GetProductResponse> products = new ArrayList<>();
+        List<String> productIds = getProductsRequest.getProductIds();
+        List<String> errorIds = new ArrayList<>();
+
+//        List<Product> productList = productRepository.findByProductIdIn(productIds);
+//        productList.stream().map(product -> new GetProductResponse(product.getProductId(),))
+        for (String id : productIds) {
+
+            try {
+                long pId = Long.parseLong(id);
+                GetProductResponse product = getProduct(pId);
+                products.add(product);
+            }
+            catch (ProductNotFoundException e) {
+                errorIds.add(id);
+            }
+            catch (NumberFormatException e) {
+                errorIds.add(id);
+            }
+        }
+        response.setProducts(products);
+        response.setInvalidProductIds(errorIds);
+
+        return response;
     }
 }
